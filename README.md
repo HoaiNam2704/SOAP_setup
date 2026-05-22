@@ -1,157 +1,109 @@
-#SOAP
+# Lưu ý về phiên bản Java
 
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+## Project hiện dùng JDK 17
 
-    <modelVersion>4.0.0</modelVersion>
+Trong `pom.xml`:
 
-    <groupId>com.mycompany</groupId>
-    <artifactId>test_wdls</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+```xml
+<maven.compiler.release>17</maven.compiler.release>
+```
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>21</maven.compiler.release>
-    </properties>
+và:
 
-    <dependencies>
+```xml
+<release>17</release>
+```
 
-        <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-rt</artifactId>
-            <version>4.0.2</version>
-        </dependency>
+---
 
-    </dependencies>
+# Kiểm tra Java trước khi build
 
-    <build>
-        <plugins>
+Kiểm tra Java:
 
-            <plugin>
-                <groupId>com.sun.xml.ws</groupId>
-                <artifactId>jaxws-maven-plugin</artifactId>
-                <version>4.0.2</version>
+```bash
+java -version
+```
 
-                <executions>
+Kiểm tra Maven:
 
-                    <!-- DataService -->
-                    <execution>
-                        <id>wsimport-generate-DataService</id>
+```bash
+mvn -version
+```
 
-                        <phase>generate-sources</phase>
+---
 
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
+# Nếu máy dùng JDK 21
 
-                        <configuration>
+Có thể đổi trong `pom.xml`:
 
-                            <wsdlUrls>
-                                <wsdlUrl>
-                                    http://36.50.135.242:2221/DataService?wsdl
-                                </wsdlUrl>
-                            </wsdlUrls>
+```xml
+<maven.compiler.release>21</maven.compiler.release>
+```
 
-                            <packageName>
-                                com.mycompany.dataservice
-                            </packageName>
+và:
 
-                            <sourceDestDir>
-                                ${project.build.directory}/generated-sources/wsimport
-                            </sourceDestDir>
+```xml
+<release>21</release>
+```
 
-                            <keep>true</keep>
-                            <verbose>true</verbose>
-                            <extension>true</extension>
+---
 
-                        </configuration>
-                    </execution>
+# Nếu bị lỗi Maven compile
 
-                    <!-- CharacterService -->
-                    <execution>
-                        <id>wsimport-generate-CharacterService</id>
+Chạy:
 
-                        <phase>generate-sources</phase>
+```bash
+mvn clean install -U
+```
 
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
+---
 
-                        <configuration>
+# Nếu Maven bị lỗi cache dependency
 
-                            <wsdlUrls>
-                                <wsdlUrl>
-                                    http://36.50.135.242:2221/CharacterService?wsdl
-                                </wsdlUrl>
-                            </wsdlUrls>
+Xóa cache Maven:
 
-                            <packageName>
-                                com.mycompany.characterservice
-                            </packageName>
+Windows:
 
-                            <sourceDestDir>
-                                ${project.build.directory}/generated-sources/wsimport
-                            </sourceDestDir>
+```text
+C:\Users\YOUR_NAME\.m2\repository
+```
 
-                            <keep>true</keep>
-                            <verbose>true</verbose>
-                            <extension>true</extension>
+Sau đó build lại:
 
-                        </configuration>
-                    </execution>
+```bash
+mvn clean install
+```
 
-                    <!-- ObjectService -->
-                    <execution>
-                        <id>wsimport-generate-ObjectService</id>
+---
 
-                        <phase>generate-sources</phase>
+# Nếu đổi tên project
 
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
+Ví dụ đổi sang:
 
-                        <configuration>
+```text
+final_soap
+```
 
-                            <wsdlUrls>
-                                <wsdlUrl>
-                                    http://36.50.135.242:2221/ObjectService?wsdl
-                                </wsdlUrl>
-                            </wsdlUrls>
+thì sửa trong `pom.xml`:
 
-                            <packageName>
-                                com.mycompany.objectservice
-                            </packageName>
+```xml
+<artifactId>final_soap</artifactId>
+```
 
-                            <sourceDestDir>
-                                ${project.build.directory}/generated-sources/wsimport
-                            </sourceDestDir>
+Có thể sửa thêm:
 
-                            <keep>true</keep>
-                            <verbose>true</verbose>
-                            <extension>true</extension>
+```xml
+<groupId>com.finalsoap</groupId>
+```
 
-                        </configuration>
-                    </execution>
+---
 
-                </executions>
+# Sau khi sửa pom.xml
 
-            </plugin>
+Luôn chạy lại:
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+```bash
+mvn clean install
+```
 
-                <configuration>
-                    <release>21</release>
-                </configuration>
-
-            </plugin>
-
-        </plugins>
-    </build>
-
-</project>
+để Maven generate lại source code từ WSDL.
